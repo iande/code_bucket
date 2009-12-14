@@ -61,17 +61,17 @@ class InfiniteEnumeration
         idx > shift
       }
     }
-    AcceptingInfiniteEnumeration.new(self, shifter.call(n))
+    AcceptingInfiniteEnumeration.new(self, &shifter.call(n))
   end
 
   def drop_while(&block)
     shifter = lambda { |check|
       done_checking = false
       lambda { |k|
-        done_checking ||= check.call(k)
+        done_checking ||= !check.call(k)
       }
     }
-    AcceptingInfiniteEnumeration.new(self, shifter.call(block))
+    AcceptingInfiniteEnumeration.new(self, &shifter.call(block))
   end
 
   def [](index, end_at=nil)
