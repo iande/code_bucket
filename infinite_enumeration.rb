@@ -114,7 +114,7 @@ class InfiniteEnumeration
         !if_true.call(v)
       }
     }
-    block_given? ? AcceptingInfiniteEnumeration.new(self, rejector.call(block)) : self
+    block_given? ? AcceptingInfiniteEnumeration.new(self, &rejector.call(block)) : self
   end
   
   alias find detect
@@ -134,7 +134,7 @@ class AcceptingInfiniteEnumeration < InfiniteEnumeration
 
   def each
     if block_given?
-      @sequencer.seq do |v|
+      @sequencer.each do |v|
         yield v if @included.call(v)
       end
     else
@@ -151,7 +151,7 @@ class TransformingInfiniteEnumeration < InfiniteEnumeration
 
   def each
     if block_given?
-      @sequencer.seq do |v|
+      @sequencer.each do |v|
         yield @transform.call(v)
       end
     else
