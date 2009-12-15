@@ -11,9 +11,10 @@ different approaches found in:
 
 * infinite_enumeration.rb (and generators.rb)
 * infseq.rb
-* numfilter.rb
+* numfilter.rb (and everything in infseq/ directory)
 
-So far, numfilter.rb is my favored implementation.
+So far, numfilter.rb is my favored implementation.  And this feeling is only
+getting stronger.
 
 ## Legal Jazz
 
