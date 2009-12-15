@@ -4,12 +4,23 @@ class InfiniteEnumeration
   end
 
   def each_with_index(&block)
-    if block_given?
+    indexer = lambda {
       idx = -1
-      map { |n| [n, idx+=1] }.each(&block)
-    else
-      enum_for(:each_with_index)
-    end
+      lambda { |n| [n, idx+=1] }
+    }
+    indexed = map(&indexer.call())
+    block_given? ? indexed.each(&block) : indexed
+  end
+
+  # Not necessariliy what one might expect from a cross product, but
+  # I like this representation as enum1.cross(enum2)[i][j] will correspond to:
+  #     [ enum1[i], enum2[j] ]
+  # Thus giving a predictable means of finding the particular ordered pair
+  # within an infinite cross product.
+  def cross(enum)
+    map { |a|
+      enum.map { |b| [a, b] }
+    }
   end
 
   def each
@@ -22,16 +33,17 @@ class InfiniteEnumeration
     end
   end
 
-  def first(n=1)
-    raise "Number to collect must be > 0" if n <= 0
+  def first(up_to=nil)
+    raise "Number to collect must be > 0" if up_to && up_to <= 0
     finite_collection = []
     idx = 0
+    n = up_to || 1
     each do |v|
       finite_collection << v
       idx += 1
       break if idx == n
     end
-    n > 1 ? finite_collection : finite_collection.first
+    up_to ? finite_collection : finite_collection.first
   end
 
   def any?
@@ -45,12 +57,31 @@ class InfiniteEnumeration
     any_match
   end
 
+  # As the enumeration is infinite, the number of times to cycle
+  # specified by the parameter +n+ is meaningless.
   def cycle(n=nil, &block)
-    if n
-      first(n).cycle(&block)
-    else
-      each(&block)
+    each(&block)
+  end
+
+  def each_slice(n, &block)
+    each do |k|
+      push_it ||= []
+      push_it << k
+      if push_it.size == n
+        yield(push_it)
+        push_it = []
+      end
     end
+  end
+
+  def groups_of(size)
+    TransformingInfiniteSequence.new(self) do |k|
+
+    end
+  end
+
+  def consecutive_sequences(size)
+
   end
 
   def drop(n)
@@ -88,7 +119,7 @@ class InfiniteEnumeration
   end
 
   def inspect
-    '{' + first(5).inject('') { |acc, k| acc + k.to_s + ', '} + '...}'
+    '{' + first(5).inject('') { |acc, k| acc + k.inspect + ', '} + '...}'
   end
 
   def to_s; inspect; end
@@ -154,6 +185,21 @@ class TransformingInfiniteEnumeration < InfiniteEnumeration
       @sequencer.each do |v|
         yield @transform.call(v)
       end
+    else
+      enum_for(:each)
+    end
+  end
+end
+
+class EvaluatingInfiniteEnumeration < InfiniteEnumeration
+  def initialize(base_enum, &block)
+    @sequencer = base_enum
+    @do_bit = block
+  end
+
+  def each
+    if block_given?
+      
     else
       enum_for(:each)
     end
