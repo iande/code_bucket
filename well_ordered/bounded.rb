@@ -74,6 +74,15 @@ module WellOrdered
       acc
     end
 
+    def inject(start=nil, &block)
+      raise "can't inject with an unbounded sequence" unless bounded_above? && bounded_below?
+      acc = start || 0
+      each do |x|
+        acc = yield(acc, x)
+      end
+      acc
+    end
+
     def to_s
       @base.to_s
     end

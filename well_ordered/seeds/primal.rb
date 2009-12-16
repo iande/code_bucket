@@ -1,7 +1,7 @@
 module WellOrdered
-  module Sequences
+  module Seeds
     class Primal
-      include WellOrdered::Sequences::Numerical
+      include WellOrdered::Seeds::Numerical
       
       def initialize(s=2, priors=nil)
         @base = s

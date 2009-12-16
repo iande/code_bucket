@@ -15,7 +15,9 @@ different approaches found in:
 1. well_ordered.rb (and everything in well_ordered/ directory)
 
 well_ordered.rb is the start of my refactoring.  After a days journey through
-coding, we're starting to arrive at something I like.  To use the WellOrdered
+coding, we're starting to arrive at something I like.  The name isn't accurrate
+with regard to the set theoretic definition of *wellorder*, I'm just not sure
+what else to call it at this time.  To use the WellOrdered
 module, one need only define the `succ` and `pred` instance methods that return
 the current object's successor and predecessor, respectively.  To be able to
 manipulate things as countably infinite sequences, it may be helpful to use
