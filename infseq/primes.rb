@@ -1,31 +1,37 @@
 class Primes < FilterSequence
-  def initialize(cur=nil, pred=nil)
-    pred ||= Naturals.new(2, nil)
-    if cur
-      filter = lambda { |x| cur.call(x) && x % pred != 0 }
+  # By the filtering mechanism, a given prime's predecessors will not pass their own checks
+  # thus:
+  pred do |prev|
+    filter, cur = *prev
+    prior = filter.predecessor_for(cur.to_i)
+    raise StopIteration, "#{prev[1]} is the min prime" unless prior
+    [filter, prior]
+  end
+
+  def initialize(filter=nil, pred=2)
+    if filter
+      filter.add(pred)
     else
-      filter = lambda { |x| x % pred != 0 }
+      filter = DivisorCheck.new(pred)
     end
     super(filter, pred)
   end
 
-  def factors_of(num)
-    factor(num).first
-  end
-
-  def factor(num)
-    pr = take_while { |p| p <= num }
-    pr.inject([ [], [] ]) do |acc, p|
-      if (num % p == 0)
-        exp = 0
-        while num > 0 && (num % p == 0)
-          exp += 1
-          num = num / p
-        end
-        acc.first << p
-        acc.last << exp
-      end
-      acc
+  class DivisorCheck
+    def initialize(div=nil)
+      @chain = []
+      add(div) if div
+    end
+    def add(div)
+      div = div.to_i
+      @chain << div
+    end
+    def predecessor_for(k)
+      idx = @chain.index(k)
+      (idx && idx > 0) ? @chain[idx-1] : nil
+    end
+    def call(x)
+      @chain.all? { |div| x % div != 0 }
     end
   end
 end
