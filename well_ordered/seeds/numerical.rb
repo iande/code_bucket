@@ -75,7 +75,7 @@ module WellOrdered
     end
 
     class IntegerBased
-      include WellOrdered::Sequences::Numerical
+      include WellOrdered::Seeds::Numerical
 
       def initialize(seed=0)
         @seed = seed
