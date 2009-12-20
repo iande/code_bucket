@@ -33,6 +33,19 @@ some methods that I don't feel are generally implementable (`min`, `max`, etc.)
 and some that I either can't think of an appropriate analogue for (eg: `inject`)
 or haven't bothered to implement yet (`drop`, `drop_while`).
 
+## Song Birds
+
+The `birds` directory contains my first few stabs at implementing Raymond Smullyan's
+song birds (combinators) in terms of Ruby lambda objects.  They work, mostly.  There
+is an issue with Y-combinators (Sage birds) and recursion in general due to how
+I initially handled combinator evaluation and Ruby's evaluation of parameters to
+a method before invoking the method.  In short, a straight-forward attempt at making
+a Y-combinator from composing two Turing birds results in infinite recursion because
+the recursion portion of the combinatory expression is evaluated in an unbounded
+fashion, and the underlying function is never once invoked.  I'm working on resolving
+this now by considering a different approach, though this approach may convince me
+that Ruby isn't an appropriate place to think about things in terms of combinators.
+
 ## Legal Jazz
 
 All code here was written by Ian D. Eccles unless otherwise noted.
