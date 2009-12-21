@@ -46,6 +46,24 @@ fashion, and the underlying function is never once invoked.  I'm working on reso
 this now by considering a different approach, though this approach may convince me
 that Ruby isn't an appropriate place to think about things in terms of combinators.
 
+I believe I've corrected this problem with the new `birds.rb` file that includes
+`birds/combinators.rb` and `birds/combinators/bird.rb`.  For instance:
+
+    factorial = U.call(U).call(lambda { |fact|
+      lambda { |n| (n==0 && 1) or (n * fact.call(n-1)) }
+    })
+
+    factorial.call(6)
+    # => 720
+
+If this is now working appropriately, I will be very happy, as there is no
+language specific tomfoolery being applied to the Y-combinator.  It's just as
+straight forward as `U.call(U).call(...)` and this excites me!
+
+Alternatively, you could do `L.call(O).call(L.call(O)).call(...)` or any other
+Sage bird combinator you like (in fact, this is equivalent to the TuringTuring
+combinator, perhaps a better example would be `S.call(L).call(L).call(...)`.)
+
 ## Legal Jazz
 
 All code here was written by Ian D. Eccles unless otherwise noted.
