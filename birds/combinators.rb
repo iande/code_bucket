@@ -32,13 +32,10 @@ module Combinators
 
     # A few sage birds, named for their "distinguishing" bird.
     # In truth, the naming is kind of arbitrary.
-    LO = L.call(O)
     YU = U.call(U)
     YS = S.call(L).call(L)
-    # As a Turing bird is LO, this is identical to the SageTuring.
-    # Of course, each of these is equivalent, anyway.
-    #YO = LO.call(LO)
     YB = B.call(M).call(L)
     YQ = Q.call(Q.call(M)).call(M)
+    Y = YS
   end
 end
